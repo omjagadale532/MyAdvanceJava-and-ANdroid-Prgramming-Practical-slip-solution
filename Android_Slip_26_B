@@ -1,0 +1,88 @@
+
+
+// android programming
+<!-- res/layout/activity_main.xml -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="GFG"
+        android:gravity="center"
+        android:background="#4CAF50"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:padding="8dp"/>
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Welcome..."
+        android:textSize="18sp"
+        android:padding="8dp"/>
+
+    <Button
+        android:id="@+id/showButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show message"/>
+</LinearLayout>
+
+
+
+
+
+//MainActivity.java
+
+package com.example.spinnerlayout;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+ Spinner spinner;
+ TextView resultText;
+ Button showButton;
+ String[] items = {"TSA with C","Data structures","Welcome page","Algo filters","TSA with Java","CS"};
+
+ @Override
+ protected void onCreate(Bundle savedInstanceState) {
+     super.onCreate(savedInstanceState);
+     setContentView(R.layout.activity_main);
+
+     spinner = findViewById(R.id.spinner);
+     resultText = findViewById(R.id.resultText);
+     showButton = findViewById(R.id.showButton);
+
+     ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
+     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+     spinner.setAdapter(adapter);
+
+     showButton.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+             String selected = spinner.getSelectedItem().toString();
+             resultText.setText(selected);
+         }
+     });
+ }
+}
+
+
+

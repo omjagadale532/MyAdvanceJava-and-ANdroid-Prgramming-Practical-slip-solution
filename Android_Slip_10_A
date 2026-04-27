@@ -1,0 +1,137 @@
+
+// Android programmng 
+//AndroidManifest.xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+package="com.example.googlemapsapp">
+
+<uses-permission android:name="android.permission.INTERNET"/>
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+<application
+    android:allowBackup="true"
+    android:label="MapApp"
+    android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+
+    <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="YOUR_API_KEY"/>
+
+    <activity android:name=".MapsActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN"/>
+            <category android:name="android.intent.category.LAUNCHER"/>
+        </intent-filter>
+    </activity>
+
+</application>
+</manifest>
+
+
+
+//activity_maps.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btnZoomIn"
+            android:text="Zoom In"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnZoomOut"
+            android:text="Zoom Out"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnSatellite"
+            android:text="Satellite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
+    
+    
+    
+    
+    //MapsActivity.java
+    
+    package com.example.googlemapsapp;
+
+    import android.os.Bundle;
+    import android.view.View;
+    import android.widget.Button;
+
+    import androidx.fragment.app.FragmentActivity;
+
+    import com.google.android.gms.maps.*;
+    import com.google.android.gms.maps.model.LatLng;
+
+    public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+
+        private GoogleMap mMap;
+        Button btnZoomIn, btnZoomOut, btnSatellite;
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_maps);
+
+            btnZoomIn = findViewById(R.id.btnZoomIn);
+            btnZoomOut = findViewById(R.id.btnZoomOut);
+            btnSatellite = findViewById(R.id.btnSatellite);
+
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
+        }
+
+        @Override
+        public void onMapReady(GoogleMap googleMap) {
+            mMap = googleMap;
+
+            LatLng location = new LatLng(18.5204, 73.8567); // Example: Pune
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10));
+
+            btnZoomIn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mMap.animateCamera(CameraUpdateFactory.zoomIn());
+                }
+            });
+
+            btnZoomOut.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mMap.animateCamera(CameraUpdateFactory.zoomOut());
+                }
+            });
+
+            btnSatellite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                }
+            });
+        }
+    }
+    

@@ -1,0 +1,99 @@
+
+
+
+// adroid programming
+//File 1: MainActivity.java
+package com.example.switchtoggleapp;
+
+import android.os.Bundle;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.ToggleButton;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+    Switch switchBtn;
+    ToggleButton toggleBtn;
+    TextView resultView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        switchBtn = findViewById(R.id.switchBtn);
+        toggleBtn = findViewById(R.id.toggleBtn);
+        resultView = findViewById(R.id.resultView);
+
+        switchBtn.setOnCheckedChangeListener((CompoundButton buttonView, boolean isChecked) -> {
+            if(isChecked) {
+                resultView.setText("Switch is ON");
+            } else {
+                resultView.setText("Switch is OFF");
+            }
+        });
+
+        toggleBtn.setOnCheckedChangeListener((CompoundButton buttonView, boolean isChecked) -> {
+            if(isChecked) {
+                resultView.setText("Toggle Button is ON");
+            } else {
+                resultView.setText("Toggle Button is OFF");
+            }
+        });
+    }
+}
+
+
+
+//File 2: activity_main.xml
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Switch
+        android:id="@+id/switchBtn"
+        android:text="Switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <ToggleButton
+        android:id="@+id/toggleBtn"
+        android:textOn="ON"
+        android:textOff="OFF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/resultView"
+        android:text="Result will appear here"
+        android:textSize="18sp"
+        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
+
+
+
+//File 3: AndroidManifest.xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.switchtoggleapp">
+
+    <application
+        android:allowBackup="true"
+        android:label="SwitchToggleApp"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat.Light">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+
+

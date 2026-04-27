@@ -1,0 +1,89 @@
+
+
+// android programming
+//File 1: MainActivity.java
+package com.example.timepickerapp;
+
+import android.app.TimePickerDialog;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.TimePicker;
+import androidx.appcompat.app.AppCompatActivity;
+import java.util.Calendar;
+
+public class MainActivity extends AppCompatActivity {
+    Button pickTimeBtn;
+    TextView timeView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        pickTimeBtn = findViewById(R.id.pickTimeBtn);
+        timeView = findViewById(R.id.timeView);
+
+        pickTimeBtn.setOnClickListener(v -> {
+            Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+
+            TimePickerDialog tpd = new TimePickerDialog(MainActivity.this,
+                    (TimePicker view, int selectedHour, int selectedMinute) -> {
+                        timeView.setText("Selected Time: " + selectedHour + ":" + selectedMinute);
+                    }, hour, minute, true);
+            tpd.show();
+        });
+    }
+}
+
+
+
+
+
+//File 2: activity_main.xml
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical"
+android:padding="20dp"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+<Button
+    android:id="@+id/pickTimeBtn"
+    android:text="Pick Time"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+
+<TextView
+    android:id="@+id/timeView"
+    android:text="Selected Time will appear here"
+    android:textSize="18sp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"/>
+</LinearLayout>
+
+
+
+
+//File 3: AndroidManifest.xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+package="com.example.timepickerapp">
+
+<application
+    android:allowBackup="true"
+    android:label="TimePickerApp"
+    android:supportsRtl="true"
+    android:theme="@style/Theme.AppCompat.Light">
+    <activity android:name=".MainActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN"/>
+            <category android:name="android.intent.category.LAUNCHER"/>
+        </intent-filter>
+    </activity>
+</application>
+</manifest>
+
+
+

@@ -1,0 +1,107 @@
+
+
+// android prgramming
+//File 1: MainActivity.java
+package com.example.twonumbers;
+
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+    EditText num1Input, num2Input;
+    Button submitBtn;
+    TextView resultView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        num1Input = findViewById(R.id.num1Input);
+        num2Input = findViewById(R.id.num2Input);
+        submitBtn = findViewById(R.id.submitBtn);
+        resultView = findViewById(R.id.resultView);
+
+        submitBtn.setOnClickListener(v -> {
+            String n1 = num1Input.getText().toString();
+            String n2 = num2Input.getText().toString();
+
+            if(!n1.isEmpty() && !n2.isEmpty()) {
+                int num1 = Integer.parseInt(n1);
+                int num2 = Integer.parseInt(n2);
+
+                if(num1 > 10 && num2 > 10) {
+                    resultView.setText("Both numbers are greater than 10. Please enter new numbers.");
+                    num1Input.setText("");
+                    num2Input.setText("");
+                } else {
+                    resultView.setText("Number 1: " + num1 + "\nNumber 2: " + num2);
+                }
+            }
+        });
+    }
+}
+
+
+
+
+//File 2: activity_main.xml
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical"
+android:padding="20dp"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+<EditText
+    android:id="@+id/num1Input"
+    android:hint="Enter First Number"
+    android:inputType="number"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+
+<EditText
+    android:id="@+id/num2Input"
+    android:hint="Enter Second Number"
+    android:inputType="number"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+
+<Button
+    android:id="@+id/submitBtn"
+    android:text="Submit"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+
+<TextView
+    android:id="@+id/resultView"
+    android:text="Result will appear here"
+    android:textSize="18sp"
+    android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+</LinearLayout>
+
+
+
+
+
+//File 3: AndroidManifest.xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+package="com.example.twonumbers">
+
+<application
+    android:allowBackup="true"
+    android:label="TwoNumbersApp"
+    android:supportsRtl="true"
+    android:theme="@style/Theme.AppCompat.Light">
+    <activity android:name=".MainActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN"/>
+            <category android:name="android.intent.category.LAUNCHER"/>
+        </intent-filter>
+    </activity>
+</application>
+</manifest>

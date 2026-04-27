@@ -1,0 +1,126 @@
+
+//Android Programming
+//1) MainActivity.java
+
+//Android Programming
+//✅ 1) MainActivity.java
+package com.example.factorialapp;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+  EditText etNum;
+  Button btn;
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.activity_main);
+
+      etNum = findViewById(R.id.etNum);
+      btn = findViewById(R.id.btnCalc);
+
+      btn.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+
+              int n = Integer.parseInt(etNum.getText().toString());
+
+              long fact = 1;
+              for (int i = 1; i <= n; i++) {
+                  fact = fact * i;
+              }
+
+              Intent i = new Intent(MainActivity.this, SecondActivity.class);
+              i.putExtra("result", fact);
+              startActivity(i);
+          }
+      });
+  }
+}
+
+
+
+
+//✅ 2) SecondActivity.java
+package com.example.factorialapp;
+
+import android.os.Bundle;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class SecondActivity extends AppCompatActivity {
+
+  TextView tv;
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.activity_second);
+
+      tv = findViewById(R.id.tvResult);
+
+      long result = getIntent().getLongExtra("result", 0);
+      tv.setText("Factorial = " + result);
+  }
+}
+
+
+
+//✅ 3) activity_main.xml
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:gravity="center"
+android:orientation="vertical">
+
+<EditText
+  android:id="@+id/etNum"
+  android:layout_width="200dp"
+  android:layout_height="wrap_content"
+  android:hint="Enter number"
+  android:inputType="number" />
+
+<Button
+  android:id="@+id/btnCalc"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:text="Calculate" />
+</LinearLayout>
+
+
+
+//✅ 4) activity_second.xml
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:gravity="center"
+android:orientation="vertical">
+
+<TextView
+  android:id="@+id/tvResult"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:textSize="22sp" />
+</LinearLayout>
+
+
+//✅ 5) AndroidManifest.xml
+
+<application ... >
+<activity android:name=".SecondActivity" />
+
+<activity android:name=".MainActivity">
+  <intent-filter>
+      <action android:name="android.intent.action.MAIN"/>
+      <category android:name="android.intent.category.LAUNCHER"/>
+  </intent-filter>
+</activity>
+</application>
+

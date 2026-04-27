@@ -1,0 +1,145 @@
+
+// android programming
+//File 1: MainActivity.java
+package com.example.stringoperation;
+
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+    EditText inputString;
+    RadioGroup radioGroup;
+    Button clickBtn;
+    TextView outputView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        inputString = findViewById(R.id.inputString);
+        radioGroup = findViewById(R.id.radioGroup);
+        clickBtn = findViewById(R.id.clickBtn);
+        outputView = findViewById(R.id.outputView);
+
+        clickBtn.setOnClickListener(v -> {
+            String str = inputString.getText().toString();
+            int selectedId = radioGroup.getCheckedRadioButtonId();
+            String result = "";
+
+            if(selectedId != -1) {
+                RadioButton rb = findViewById(selectedId);
+                String choice = rb.getText().toString();
+
+                switch(choice) {
+                    case "Uppercase":
+                        result = str.toUpperCase();
+                        break;
+                    case "Lowercase":
+                        result = str.toLowerCase();
+                        break;
+                    case "Right 5 Character":
+                        if(str.length() >= 5)
+                            result = str.substring(str.length()-5);
+                        else
+                            result = str;
+                        break;
+                    case "Left 5 Character":
+                        if(str.length() >= 5)
+                            result = str.substring(0,5);
+                        else
+                            result = str;
+                        break;
+                }
+            }
+            outputView.setText("Output : " + result);
+        });
+    }
+}
+
+
+
+
+
+//File 2: activity_main.xml
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical"
+android:padding="20dp"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+<EditText
+    android:id="@+id/inputString"
+    android:hint="Enter String"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+
+<RadioGroup
+    android:id="@+id/radioGroup"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RadioButton
+        android:text="Uppercase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <RadioButton
+        android:text="Lowercase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <RadioButton
+        android:text="Right 5 Character"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <RadioButton
+        android:text="Left 5 Character"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</RadioGroup>
+
+<Button
+    android:id="@+id/clickBtn"
+    android:text="Click"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+
+<TextView
+    android:id="@+id/outputView"
+    android:text="Output : "
+    android:textSize="18sp"
+    android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+</LinearLayout>
+
+
+
+
+
+
+//File 3: AndroidManifest.xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+package="com.example.stringoperation">
+
+<application
+    android:allowBackup="true"
+    android:label="StringOperationApp"
+    android:supportsRtl="true"
+    android:theme="@style/Theme.AppCompat.Light">
+    <activity android:name=".MainActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN"/>
+            <category android:name="android.intent.category.LAUNCHER"/>
+        </intent-filter>
+    </activity>
+</application>
+</manifest>

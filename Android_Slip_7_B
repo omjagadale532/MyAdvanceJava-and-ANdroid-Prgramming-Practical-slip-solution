@@ -1,0 +1,194 @@
+
+
+
+
+// Android Programming
+//1) DatabaseHelper.java
+package com.example.customerdb;
+
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.database.Cursor;
+import android.content.ContentValues;
+
+public class DatabaseHelper extends SQLiteOpenHelper {
+
+    public static final String DB_NAME = "CustomerDB";
+    public static final String TABLE_NAME = "Customer";
+
+    public DatabaseHelper(Context context) {
+        super(context, DB_NAME, null, 1);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE Customer(id INTEGER PRIMARY KEY, name TEXT, address TEXT, phno TEXT)");
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS Customer");
+        onCreate(db);
+    }
+
+    public boolean insertCustomer(int id, String name, String address, String phno) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+        cv.put("id", id);
+        cv.put("name", name);
+        cv.put("address", address);
+        cv.put("phno", phno);
+
+        long result = db.insert(TABLE_NAME, null, cv);
+
+        return result != -1;
+    }
+
+    public Cursor getAllCustomers() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT * FROM Customer", null);
+    }
+}
+
+
+//2) MainActivity.java
+package com.example.customerdb;
+
+import android.database.Cursor;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText edtId, edtName, edtAddress, edtPhno;
+    Button btnInsert, btnShow;
+    DatabaseHelper db;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        edtId = findViewById(R.id.edtId);
+        edtName = findViewById(R.id.edtName);
+        edtAddress = findViewById(R.id.edtAddress);
+        edtPhno = findViewById(R.id.edtPhno);
+
+        btnInsert = findViewById(R.id.btnInsert);
+        btnShow = findViewById(R.id.btnShow);
+
+        db = new DatabaseHelper(this);
+
+        btnInsert.setOnClickListener(v -> {
+            int id = Integer.parseInt(edtId.getText().toString());
+            String name = edtName.getText().toString();
+            String address = edtAddress.getText().toString();
+            String phno = edtPhno.getText().toString();
+
+            boolean inserted = db.insertCustomer(id, name, address, phno);
+
+            if (inserted) {
+                Toast.makeText(this, "Customer Inserted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Insert Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnShow.setOnClickListener(v -> {
+            Cursor cursor = db.getAllCustomers();
+
+            if (cursor.getCount() == 0) {
+                Toast.makeText(this, "No Customer Found", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            StringBuilder data = new StringBuilder();
+
+            while (cursor.moveToNext()) {
+                data.append("ID: ").append(cursor.getInt(0)).append("\n");
+                data.append("Name: ").append(cursor.getString(1)).append("\n");
+                data.append("Address: ").append(cursor.getString(2)).append("\n");
+                data.append("Phone: ").append(cursor.getString(3)).append("\n\n");
+            }
+
+            Toast.makeText(this, data.toString(), Toast.LENGTH_LONG).show();
+        });
+    }
+}
+
+
+
+
+//3) activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <EditText
+        android:id="@+id/edtId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Customer ID"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/edtName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Customer Name" />
+
+    <EditText
+        android:id="@+id/edtAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Address" />
+
+    <EditText
+        android:id="@+id/edtPhno"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Phone Number"
+        android:inputType="phone" />
+
+    <Button
+        android:id="@+id/btnInsert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Insert Customer" />
+
+    <Button
+        android:id="@+id/btnShow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show All Customers" />
+
+</LinearLayout>
+
+
+
+
+//4) AndroidManifest.xml
+<application
+android:theme="@style/Theme.CustomerDB"
+android:label="Customer DB">
+
+<activity
+    android:name=".MainActivity"
+    android:exported="true">
+
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+    </intent-filter>
+
+</activity>
+</application>

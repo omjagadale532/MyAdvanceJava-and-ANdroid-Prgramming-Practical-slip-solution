@@ -1,0 +1,108 @@
+
+
+
+// android programming
+//  res/layout/activity_main.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/numberInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter a number"
+        android:inputType="number"/>
+
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:paddingTop="10dp"/>
+</LinearLayout>
+
+
+
+//MainActivity.java
+package com.example.menupalindrome;
+
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+ EditText numberInput;
+ TextView resultText;
+
+ @Override
+ protected void onCreate(Bundle savedInstanceState) {
+     super.onCreate(savedInstanceState);
+     setContentView(R.layout.activity_main);
+
+     numberInput = findViewById(R.id.numberInput);
+     resultText = findViewById(R.id.resultText);
+ }
+
+ @Override
+ public boolean onCreateOptionsMenu(Menu menu) {
+     menu.add(0, 1, 0, "Check Palindrome");
+     menu.add(0, 2, 0, "Reverse Number");
+     return true;
+ }
+
+ @Override
+ public boolean onOptionsItemSelected(MenuItem item) {
+     String input = numberInput.getText().toString();
+     if (input.isEmpty()) return false;
+     int num = Integer.parseInt(input);
+
+     switch (item.getItemId()) {
+         case 1:
+             if (isPalindrome(num)) {
+                 resultText.setText(num + " is Palindrome");
+             } else {
+                 resultText.setText(num + " is not Palindrome");
+             }
+             return true;
+         case 2:
+             resultText.setText("Reverse: " + reverseNumber(num));
+             return true;
+     }
+     return super.onOptionsItemSelected(item);
+ }
+
+ private boolean isPalindrome(int n) {
+     return n == reverseNumber(n);
+ }
+
+ private int reverseNumber(int n) {
+     int rev = 0;
+     while (n > 0) {
+         rev = rev * 10 + n % 10;
+         n /= 10;
+     }
+     return rev;
+ }
+}
+
+
+
+// AndroidManifest.xml -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.menupalindrome">
+
+    <application android:allowBackup="true" android:supportsRtl="true">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

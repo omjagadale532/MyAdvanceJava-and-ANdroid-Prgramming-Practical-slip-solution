@@ -1,0 +1,110 @@
+
+// android progrramming
+//File 1: MainActivity.java
+package com.example.imageswitcherdemo;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageSwitcher;
+import android.widget.ImageView;
+import android.widget.ViewSwitcher;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+    ImageSwitcher imageSwitcher;
+    Button prevBtn, nextBtn;
+    int[] images = {R.drawable.img1, R.drawable.img2, R.drawable.img3};
+    int index = 0;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        imageSwitcher = findViewById(R.id.imageSwitcher);
+        prevBtn = findViewById(R.id.prevBtn);
+        nextBtn = findViewById(R.id.nextBtn);
+
+        imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                ImageView iv = new ImageView(MainActivity.this);
+                iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                iv.setLayoutParams(new ImageSwitcher.LayoutParams(
+                        ImageSwitcher.LayoutParams.MATCH_PARENT,
+                        ImageSwitcher.LayoutParams.MATCH_PARENT));
+                return iv;
+            }
+        });
+
+        imageSwitcher.setImageResource(images[index]);
+
+        prevBtn.setOnClickListener(v -> {
+            index = (index - 1 + images.length) % images.length;
+            imageSwitcher.setImageResource(images[index]);
+        });
+
+        nextBtn.setOnClickListener(v -> {
+            index = (index + 1) % images.length;
+            imageSwitcher.setImageResource(images[index]);
+        });
+    }
+}
+
+
+
+//File 2: activity_main.xml
+//<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical"
+android:padding="20dp"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+<ImageSwitcher
+    android:id="@+id/imageSwitcher"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:layout_gravity="center"/>
+
+<LinearLayout
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <Button
+        android:id="@+id/prevBtn"
+        android:text="PREV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/nextBtn"
+        android:text="NEXT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
+</LinearLayout>
+
+
+
+
+
+//File 3: AndroidManifest.xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+package="com.example.imageswitcherdemo">
+
+<application
+    android:allowBackup="true"
+    android:label="ImageSwitcherDemo"
+    android:supportsRtl="true"
+    android:theme="@style/Theme.AppCompat.Light">
+    <activity android:name=".MainActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN"/>
+            <category android:name="android.intent.category.LAUNCHER"/>
+        </intent-filter>
+    </activity>
+</application>
+</manifest>

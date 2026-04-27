@@ -1,0 +1,174 @@
+
+
+//android programming
+//DBHelper.java
+package com.example.employeeapp;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+public class DBHelper extends SQLiteOpenHelper {
+ public DBHelper(Context context) {
+     super(context, "EmployeeDB", null, 1);
+ }
+
+ @Override
+ public void onCreate(SQLiteDatabase db) {
+     db.execSQL("CREATE TABLE Employee(Eno INTEGER PRIMARY KEY AUTOINCREMENT, Ename TEXT, Designation TEXT, Salary REAL)");
+ }
+
+ @Override
+ public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+     db.execSQL("DROP TABLE IF EXISTS Employee");
+     onCreate(db);
+ }
+
+ public void insertEmployee(String name, String designation, double salary) {
+     SQLiteDatabase db = this.getWritableDatabase();
+     ContentValues cv = new ContentValues();
+     cv.put("Ename", name);
+     cv.put("Designation", designation);
+     cv.put("Salary", salary);
+     db.insert("Employee", null, cv);
+ }
+
+ public String getAllEmployees() {
+     SQLiteDatabase db = this.getReadableDatabase();
+     Cursor c = db.rawQuery("SELECT * FROM Employee", null);
+     StringBuilder sb = new StringBuilder();
+     while (c.moveToNext()) {
+         sb.append("Eno: ").append(c.getInt(0))
+           .append(", Name: ").append(c.getString(1))
+           .append(", Designation: ").append(c.getString(2))
+           .append(", Salary: ").append(c.getDouble(3))
+           .append("\n");
+     }
+     c.close();
+     return sb.toString();
+ }
+}
+
+
+
+
+
+// res/layout/activity_main.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/ename"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Employee Name"/>
+
+    <EditText
+        android:id="@+id/designation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Designation"/>
+
+    <EditText
+        android:id="@+id/salary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Salary"
+        android:inputType="numberDecimal"/>
+
+    <Button
+        android:id="@+id/insertBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Insert Employee"/>
+
+    <Button
+        android:id="@+id/showBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Employees"/>
+
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:paddingTop="10dp"/>
+</LinearLayout>
+
+
+
+
+//MainActivity.java
+package com.example.employeeapp;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+ EditText ename, designation, salary;
+ Button insertBtn, showBtn;
+ TextView resultText;
+ DBHelper dbHelper;
+
+ @Override
+ protected void onCreate(Bundle savedInstanceState) {
+     super.onCreate(savedInstanceState);
+     setContentView(R.layout.activity_main);
+
+     ename = findViewById(R.id.ename);
+     designation = findViewById(R.id.designation);
+     salary = findViewById(R.id.salary);
+     insertBtn = findViewById(R.id.insertBtn);
+     showBtn = findViewById(R.id.showBtn);
+     resultText = findViewById(R.id.resultText);
+     dbHelper = new DBHelper(this);
+
+     insertBtn.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+             String name = ename.getText().toString();
+             String desig = designation.getText().toString();
+             double sal = Double.parseDouble(salary.getText().toString());
+             dbHelper.insertEmployee(name, desig, sal);
+             resultText.setText("Employee Inserted");
+         }
+     });
+
+     showBtn.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+             resultText.setText(dbHelper.getAllEmployees());
+         }
+     });
+ }
+}
+
+
+
+
+// AndroidManifest.xml -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.employeeapp">
+
+    <application android:allowBackup="true" android:supportsRtl="true">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+
+
+

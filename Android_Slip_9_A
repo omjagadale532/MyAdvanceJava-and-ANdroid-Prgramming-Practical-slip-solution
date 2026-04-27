@@ -1,0 +1,101 @@
+
+// android programming
+//activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Custom Alert Dialog"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="#800000" />
+
+    <Button
+        android:id="@+id/btnGanesh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ganesh" />
+
+    <Button
+        android:id="@+id/btnRakesh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Rakesh" />
+
+    <Button
+        android:id="@+id/btnRamesh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ramesh" />
+
+</LinearLayout>
+
+
+
+//MainActivity.java
+package com.example.tablelayoutapp;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.*;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText etFirstName, etLastName, etAddress, etPhone, etEmail;
+    RadioGroup radioGroup;
+    Button btnSubmit, btnClear;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etFirstName = findViewById(R.id.etFirstName);
+        etLastName = findViewById(R.id.etLastName);
+        etAddress = findViewById(R.id.etAddress);
+        etPhone = findViewById(R.id.etPhone);
+        etEmail = findViewById(R.id.etEmail);
+        radioGroup = findViewById(R.id.radioGroup);
+        btnSubmit = findViewById(R.id.btnSubmit);
+        btnClear = findViewById(R.id.btnClear);
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selectedId = radioGroup.getCheckedRadioButtonId();
+                RadioButton rb = findViewById(selectedId);
+
+                String data = "First Name: " + etFirstName.getText().toString() +
+                        "\nLast Name: " + etLastName.getText().toString() +
+                        "\nAddress: " + etAddress.getText().toString() +
+                        "\nPhone: " + etPhone.getText().toString() +
+                        "\nEmail: " + etEmail.getText().toString() +
+                        "\nGender: " + (rb != null ? rb.getText().toString() : "");
+
+                Toast.makeText(MainActivity.this, data, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        btnClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                etFirstName.setText("");
+                etLastName.setText("");
+                etAddress.setText("");
+                etPhone.setText("");
+                etEmail.setText("");
+                radioGroup.clearCheck();
+            }
+        });
+    }
+}

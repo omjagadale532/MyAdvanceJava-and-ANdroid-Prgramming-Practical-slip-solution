@@ -1,0 +1,203 @@
+
+
+// ANdroid Programming
+//1) MainActivity.java
+package com.example.studentapp;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.*;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText name, surname, cls, marks;
+    RadioButton male, female;
+    CheckBox cricket, reading, singing;
+    Button submit;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        name = findViewById(R.id.name);
+        surname = findViewById(R.id.surname);
+        cls = findViewById(R.id.cls);
+        marks = findViewById(R.id.marks);
+        male = findViewById(R.id.male);
+        female = findViewById(R.id.female);
+        cricket = findViewById(R.id.cricket);
+        reading = findViewById(R.id.reading);
+        singing = findViewById(R.id.singing);
+        submit = findViewById(R.id.submit);
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String gender = male.isChecked() ? "Male" : "Female";
+
+                String hobbies = "";
+                if (cricket.isChecked()) hobbies += "Cricket ";
+                if (reading.isChecked()) hobbies += "Reading ";
+                if (singing.isChecked()) hobbies += "Singing ";
+
+                Intent i = new Intent(MainActivity.this, SecondActivity.class);
+                i.putExtra("name", name.getText().toString());
+                i.putExtra("surname", surname.getText().toString());
+                i.putExtra("class", cls.getText().toString());
+                i.putExtra("gender", gender);
+                i.putExtra("hobbies", hobbies);
+                i.putExtra("marks", marks.getText().toString());
+                startActivity(i);
+            }
+        });
+    }
+}
+
+
+//2) SecondActivity.java
+package com.example.studentapp;
+
+import android.os.Bundle;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class SecondActivity extends AppCompatActivity {
+
+    TextView tv;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_second);
+
+        tv = findViewById(R.id.tv);
+
+        String data =
+                "Name\t\t: " + getIntent().getStringExtra("name") + "\n" +
+                "Surname\t: " + getIntent().getStringExtra("surname") + "\n" +
+                "Class\t\t: " + getIntent().getStringExtra("class") + "\n" +
+                "Gender\t: " + getIntent().getStringExtra("gender") + "\n" +
+                "Hobbies\t: " + getIntent().getStringExtra("hobbies") + "\n" +
+                "Marks\t\t: " + getIntent().getStringExtra("marks");
+
+        tv.setText(data);
+    }
+}
+
+
+
+//3) activity_main.xml
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:padding="20dp"
+android:orientation="vertical">
+
+<EditText
+    android:id="@+id/name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Name" />
+
+<EditText
+    android:id="@+id/surname"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Surname" />
+
+<EditText
+    android:id="@+id/cls"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Class" />
+
+<RadioGroup
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RadioButton
+        android:id="@+id/male"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Male" />
+
+    <RadioButton
+        android:id="@+id/female"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Female" />
+</RadioGroup>
+
+<CheckBox
+    android:id="@+id/cricket"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Cricket" />
+
+<CheckBox
+    android:id="@+id/reading"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Reading" />
+
+<CheckBox
+    android:id="@+id/singing"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Singing" />
+
+<EditText
+    android:id="@+id/marks"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Marks"
+    android:inputType="number" />
+
+<Button
+    android:id="@+id/submit"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Submit" />
+
+</LinearLayout>
+</ScrollView>
+
+
+
+//4) activity_second.xml
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:padding="20dp"
+android:orientation="vertical">
+
+<TextView
+    android:id="@+id/tv"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="18sp" />
+
+</LinearLayout>
+
+
+
+
+//5) AndroidManifest.xml
+<application ... >
+
+<activity android:name=".SecondActivity" />
+
+<activity android:name=".MainActivity">
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+    </intent-filter>
+</activity>
+
+</application>

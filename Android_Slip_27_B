@@ -1,0 +1,99 @@
+
+
+// android programming
+<!-- res/layout/activity_main.xml -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/numberInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter a number"
+        android:inputType="number"/>
+
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:padding="8dp"/>
+
+</LinearLayout>
+
+
+
+
+
+//MainActivity.java
+
+
+package com.example.contextmenufactorial;
+
+import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+ EditText numberInput;
+ TextView resultText;
+
+ @Override
+ protected void onCreate(Bundle savedInstanceState) {
+     super.onCreate(savedInstanceState);
+     setContentView(R.layout.activity_main);
+
+     numberInput = findViewById(R.id.numberInput);
+     resultText = findViewById(R.id.resultText);
+
+     registerForContextMenu(numberInput);
+ }
+
+ @Override
+ public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+     super.onCreateContextMenu(menu, v, menuInfo);
+     menu.setHeaderTitle("Choose Operation");
+     menu.add(0, v.getId(), 0, "Factorial");
+     menu.add(0, v.getId(), 0, "Sum of Digits");
+ }
+
+ @Override
+ public boolean onContextItemSelected(MenuItem item) {
+     String input = numberInput.getText().toString();
+     if (input.isEmpty()) return false;
+     int num = Integer.parseInt(input);
+
+     if (item.getTitle().equals("Factorial")) {
+         resultText.setText("Factorial: " + factorial(num));
+     } else if (item.getTitle().equals("Sum of Digits")) {
+         resultText.setText("Sum of Digits: " + sumOfDigits(num));
+     }
+     return true;
+ }
+
+ private long factorial(int n) {
+     long fact = 1;
+     for (int i = 1; i <= n; i++) {
+         fact *= i;
+     }
+     return fact;
+ }
+
+ private int sumOfDigits(int n) {
+     int sum = 0;
+     while (n > 0) {
+         sum += n % 10;
+         n /= 10;
+     }
+     return sum;
+ }
+}
+

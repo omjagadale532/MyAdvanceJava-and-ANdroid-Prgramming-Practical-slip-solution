@@ -1,0 +1,147 @@
+
+
+
+
+// android programming
+AndroidManifest.xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.smsapp">
+
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+
+    <application
+        android:allowBackup="true"
+        android:label="SMSApp"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+    </application>
+</manifest>
+
+
+
+//activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/etPhone"
+        android:hint="Enter Phone Number"
+        android:inputType="phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/etMessage"
+        android:hint="Enter Message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minLines="3"/>
+
+    <Button
+        android:id="@+id/btnSend"
+        android:text="Send SMS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
+
+
+
+//MainActivity.java
+package com.example.smsapp;
+
+import android.Manifest;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.telephony.SmsManager;
+import android.view.View;
+import android.widget.*;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText etPhone, etMessage;
+    Button btnSend;
+
+    String SENT = "SMS_SENT";
+    String DELIVERED = "SMS_DELIVERED";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etPhone = findViewById(R.id.etPhone);
+        etMessage = findViewById(R.id.etMessage);
+        btnSend = findViewById(R.id.btnSend);
+
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_SMS}, 1);
+
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String phone = etPhone.getText().toString();
+                String message = etMessage.getText().toString();
+
+                PendingIntent sentPI = PendingIntent.getBroadcast(MainActivity.this, 0,
+                        new Intent(SENT), PendingIntent.FLAG_IMMUTABLE);
+
+                PendingIntent deliveredPI = PendingIntent.getBroadcast(MainActivity.this, 0,
+                        new Intent(DELIVERED), PendingIntent.FLAG_IMMUTABLE);
+
+                SmsManager sms = SmsManager.getDefault();
+                sms.sendTextMessage(phone, null, message, sentPI, deliveredPI);
+            }
+        });
+
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                switch (getResultCode()) {
+                    case RESULT_OK:
+                        Toast.makeText(getBaseContext(), "SMS Sent", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        Toast.makeText(getBaseContext(), "SMS Failed", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        }, new IntentFilter(SENT));
+
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                switch (getResultCode()) {
+                    case RESULT_OK:
+                        Toast.makeText(getBaseContext(), "SMS Delivered", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        Toast.makeText(getBaseContext(), "SMS Not Delivered", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        }, new IntentFilter(DELIVERED));
+    }
+}

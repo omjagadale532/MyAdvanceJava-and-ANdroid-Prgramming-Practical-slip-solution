@@ -1,0 +1,56 @@
+
+
+
+// ANdroid Programming
+package com.example.emailapp;
+
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.widget.Button;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+    Button sendBtn;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        sendBtn = findViewById(R.id.sendBtn);
+
+        sendBtn.setOnClickListener(v -> sendEmail());
+    }
+
+    void sendEmail() {
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setType("application/octet-stream");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"receiver@example.com"});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Test Email");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "This is a test email with attachment.");
+
+        Uri uri = Uri.parse("file:///sdcard/Download/sample.txt");
+        emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
+
+        startActivity(Intent.createChooser(emailIntent, "Send email..."));
+    }
+}
+
+
+
+
+//activity_main.xml
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/sendBtn"
+        android:text="Send Email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
+
